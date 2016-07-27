@@ -1,7 +1,8 @@
 
 # UDOO Quad/Dual REST
 
-UDOO Quad/Dual REST based framework using Spark Java.  This project uses the Spark Java framework to provide the basis of simple RESTful commands
+UDOO Quad/Dual REST based framework using Spark Java.  This project uses the [Spark Java](http://sparkjava.com/)
+framework to provide the basis of simple RESTful commands
 to control the pins on your UDOO board. This is a work in progress and implements the setting and reading of pins on the Quad/Dual board. 
 
 
@@ -53,5 +54,5 @@ This project is licensed under the MIT License
 
 ## Acknowledgments
 
-* Java Spark guys for an awesomely simple framework
+* [Spark Java](http://sparkjava.com/) guys for an awesomely simple framework
 

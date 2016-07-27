@@ -20,10 +20,11 @@ import java.util.UUID;
 
 import com.dhr.quad.GpioService;
 
+@SuppressWarnings("unused")
 public class GpioPin {
 
 	// Map GPIO pins for QUAD/DUAL
-	
+
 	// Pin map for Quad/Dual
 	private static final Object[][] gpioPins = new Object[][]{
 		{0,116,"/sys/class/gpio/gpio116/"},
@@ -86,67 +87,67 @@ public class GpioPin {
 		private String name;
 		private int value;
 		private String uri;	// the URI path of the pin
-		
+
 		private static final String GPIO_DIRECTION_PATH = "/direction";
-	    private static final String GPIO_VALUE_PATH = "/value";
-	    private static final int MAXQUADPIN= 53;
+		private static final String GPIO_VALUE_PATH = "/value";
+		private static final int MAXQUADPIN= 53;
 
-	    
-	    private PinState currentPinState = PinState.LOW;
-	    private PinMode currentPinMode = PinMode.OUTPUT;
 
-	    public enum PinState{
-	        LOW,
-	        HIGH
-	    }
-	    
-	    public enum PinMode{
-	        OUTPUT,
-	        INPUT
-	    }
-	    
-	    
+		private PinState currentPinState = PinState.LOW;
+		private PinMode currentPinMode = PinMode.OUTPUT;
+
+		public enum PinState{
+			LOW,
+			HIGH
+		}
+
+		public enum PinMode{
+			OUTPUT,
+			INPUT
+		}
+
+
 
 		// Basic constructor using board numbers
 		public GpioPin(int gpioPinId) {
 
 			// Set the ID
 			this.id = gpioPinId;
-			
+
 			// Reference path for the pin
-		    uri = mkGpioUri(gpioPinId);
-			
+			uri = mkGpioUri(gpioPinId);
+
 
 		}
-		
-		// Map the pin path.
-	    private String mkGpioUri(int pinId){
-	    	
-	    	if ( pinId < 0 || pinId > MAXQUADPIN)
-	    	{
-	    		return "undefined";
-	    	}
-	    	// Get the mapped ID 
-	    	int gpoID = (int) gpioPins[pinId][1];
-	    	// Add it to the base
-	    	uri = (String) gpioPins[pinId][2];
-	        return uri;
-	    	
-	        //return FileUtils.COMMON_GPIO_URI + gpoID;
-	    }
 
-	    public String getUri() {
+		// Map the pin path.
+		private String mkGpioUri(int pinId){
+
+			if ( pinId < 0 || pinId > MAXQUADPIN)
+			{
+				return "undefined";
+			}
+			// Get the mapped ID 
+			int gpoID = (int) gpioPins[pinId][1];
+			// Add it to the base
+			uri = (String) gpioPins[pinId][2];
+			return uri;
+
+			//return FileUtils.COMMON_GPIO_URI + gpoID;
+		}
+
+		public String getUri() {
 			return uri;
 		}
 		public void setUri(String uri) {
 			this.uri = uri;
 		}
 		public boolean isExported(int pinId){
-	        File gpioDir = new File(mkGpioUri(pinId));
-	        return gpioDir.exists();
-	    }
-	        
-		
+			File gpioDir = new File(mkGpioUri(pinId));
+			return gpioDir.exists();
+		}
+
+
 
 		public int getId() {
 			return id;
@@ -168,49 +169,49 @@ public class GpioPin {
 
 
 		public PinMode getCurrentPinMode() throws Exception {
-	
+
 			currentPinMode = (Objects.equals(FileUtils.readFile(this.uri + GPIO_DIRECTION_PATH), "in"))? PinMode.INPUT:PinMode.OUTPUT;
 			return currentPinMode;
 		}
 
 		public void setCurrentPinMode(PinMode currentPinMode) throws IOException {
-			
+
 			File file = new File(this.uri + GPIO_DIRECTION_PATH);
-	        FileWriter fw = new FileWriter(file.getAbsoluteFile());
-	        BufferedWriter bw = new BufferedWriter(fw);
-	        bw.write(currentPinMode == PinMode.INPUT ? "in" : "out");
-	        bw.close();
-	    
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(currentPinMode == PinMode.INPUT ? "in" : "out");
+			bw.close();
+
 			this.currentPinMode = currentPinMode;
 		}
 
-	    public void write(PinState state) throws Exception{
-	        File file = new File(this.uri + GPIO_VALUE_PATH);
-	        FileWriter fw = new FileWriter(file.getAbsoluteFile());
-	        BufferedWriter bw = new BufferedWriter(fw);
-	        bw.write(state == PinState.HIGH ? "1" : "0");
-	        bw.close();
-	        currentPinState = state;
-	        
-	    }
-	    
-	    public PinState read() throws Exception{
-	        
-	        PinState state = (Objects.equals(FileUtils.readFile(this.uri + GPIO_VALUE_PATH), "1"))?PinState.HIGH:PinState.LOW;
-	        currentPinState = state;
-	        
-	        return state;
-	    }
-		
-		  public void high() throws Exception{
-		        //System.out.println("Set 1 on GPIO" + this.id);
-		        this.write(PinState.HIGH);
-		    }
-		    
-		    public void low() throws Exception{
-		        //System.out.println("Set 0 on GPIO" + this.id);
-		        this.write(PinState.LOW);
-		    }
+		public void write(PinState state) throws Exception{
+			File file = new File(this.uri + GPIO_VALUE_PATH);
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(state == PinState.HIGH ? "1" : "0");
+			bw.close();
+			currentPinState = state;
+
+		}
+
+		public PinState read() throws Exception{
+
+			PinState state = (Objects.equals(FileUtils.readFile(this.uri + GPIO_VALUE_PATH), "1"))?PinState.HIGH:PinState.LOW;
+			currentPinState = state;
+
+			return state;
+		}
+
+		public void high() throws Exception{
+			//System.out.println("Set 1 on GPIO" + this.id);
+			this.write(PinState.HIGH);
+		}
+
+		public void low() throws Exception{
+			//System.out.println("Set 0 on GPIO" + this.id);
+			this.write(PinState.LOW);
+		}
 
 
 }
