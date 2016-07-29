@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.dhr.quad;
 
 import static spark.Spark.*;
@@ -7,8 +10,13 @@ import java.util.Properties;
 
 import static com.dhr.quad.JsonUtil.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class App.
+ */
 public class App {
 	
+	/** The Constant CUSTOM_CHAR. */
 	private final static char[] CUSTOM_CHAR = {
 	        0b00000,
 	        0b10010,
@@ -18,8 +26,15 @@ public class App {
 	        0b00000,
 	        0b10010,
 	        0b00000};
+	
+	/** The properties. */
 	private static Properties properties;
 	
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main(String[] args) {
 
     	properties = new Properties();
@@ -44,6 +59,12 @@ public class App {
     	//GpioPin pin = new GpioPin(13,)
         
     }
+    
+    /**
+     * Gets the version string.
+     *
+     * @return the version string
+     */
     //@Override
     public static  String getVersionString() {
         return String.format("%s %s", properties.getProperty("app.name"),properties.getProperty("app.version"));

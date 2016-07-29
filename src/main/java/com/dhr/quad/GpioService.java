@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.dhr.quad;
 
 import java.io.IOException;
@@ -7,53 +10,93 @@ import com.dhr.quad.GpioPin.PinMode;
 import com.dhr.quad.GpioPin.PinState;
 import com.dhr.quad.Serial;
 
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPort;
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GpioService.
+ */
 public class GpioService {
 
+	
+	
+	/** The Gpio pins. */
 	/// Create a list of pins we want to use 
 	private Map<String, GpioPin> GpioPins = new HashMap<>();
+	
+	/** The UDOO serial for messages*/
 	static Serial UDOOserial;
 
 
+	/**
+	 * Gets the all gpio pins.
+	 *
+	 * @return the all gpio pins
+	 */
 	// Get all pint details
 	public List<GpioPin> getAllGpioPins() {
 		//TODO - Need to load these pin details
 		return new ArrayList<>(GpioPins.values());
 	}
 
+	/**
+	 * Serial message service.  Sends a single string message to the main listening port
+	 *
+	 * @param Message the message
+	 */
+	
 	public void  SerialMessageService(String Message)
 	{
 		
-		UDOOserial = new Serial();
+		//String buffer = Message + System.lineSeparator();
+		
+		String buffer = new String(Message) +  System.lineSeparator();
 
 		System.out.println("connecting to serial port...");
 		try {
-			UDOOserial.connect("/dev/ttyS0");
+			CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier("/dev/ttyS0");  
+			
 			System.out.println("Connected!");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		
+			
+			if (portIdentifier.isCurrentlyOwned()) {  
+	            System.out.println("Port in use!");  
+	        } else {  
+	            // points who owns the port and connection timeout  
+	            SerialPort serialPort = (SerialPort) portIdentifier.open("RS232Example", 2000);  
+	              
+	            // setup connection parameters  
+	            serialPort.setSerialPortParams(  
+	                9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+	            
+	            serialPort.getOutputStream().write(buffer.getBytes());
+	            serialPort.getOutputStream().flush();
+	            
+	            serialPort.close();
+	              
+	            // setup serial port reader  
+	            //new CommPortReceiver(serialPort.getInputStream()).start();  
+	        }  
 		}
 		
-		try{
-			
-			UDOOserial.read_startBufferThread();
-			byte[] b = Message.getBytes();
-			UDOOserial.writeByteArray(b);
-
-			Thread.sleep(100);
-			
-		} catch(IOException ioe) {
+				
+		catch(Exception ioe) {
 			ioe.printStackTrace();
-		} catch(InterruptedException ie) {
-			ie.printStackTrace();
 		}
 		
-		UDOOserial.disconnect();
+		
+		
+		// Message sent - no need to worry
 		return;	
 		
 	}
 	
+	/**
+	 * Gets the gpio pin.
+	 *
+	 * @param id the id
+	 * @return the gpio pin
+	 */
 	// Get the pins value based on the ID
 	public GpioPin getGpioPin(int id) {
 
@@ -69,6 +112,12 @@ public class GpioService {
 		return pin;
 	}
 
+	/**
+	 * Gets the pin uri.
+	 *
+	 * @param Id the id
+	 * @return the pin uri
+	 */
 	public String getPinUri(int Id)
 	{
 
@@ -81,6 +130,13 @@ public class GpioService {
 	}
 
 
+	/**
+	 * Update gpio pin.
+	 *
+	 * @param id the id
+	 * @param value the value
+	 * @return the gpio pin
+	 */
 	public GpioPin updateGpioPin(int id, int value) {
 
 		// Get the relevent  pin
@@ -116,14 +172,29 @@ public class GpioService {
 
 
 
+/**
+ * Gets the gpio pins.
+ *
+ * @return the gpio pins
+ */
 public Map<String, GpioPin> getGpioPins() {
 	return GpioPins;
 }
 
+/**
+ * Sets the gpio pins.
+ *
+ * @param gpioPins the gpio pins
+ */
 public void setGpioPins(Map<String, GpioPin> gpioPins) {
 	GpioPins = gpioPins;
 }
 
+/**
+ * Fail if invalid.
+ *
+ * @param id the id
+ */
 private void failIfInvalid(int id) {
 	if (id < 0) {
 		throw new IllegalArgumentException("Parameter is wrong");

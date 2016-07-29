@@ -1,7 +1,11 @@
+/*
+ * 
+ */
 package com.dhr.quad;
 
 import com.dhr.quad.FileUtils;
 
+// TODO: Auto-generated Javadoc
 /**
  *  Copyright (C) 2015 Cyril Bosselut <bossone0013@gmail.com>
  *
@@ -24,6 +28,11 @@ import com.dhr.quad.FileUtils;
 
 public class BoardInfo {
 
+    /**
+     * Gets the board ID.
+     *
+     * @return the board ID
+     */
     public static String getBoardID(){
         try{
             
@@ -37,6 +46,11 @@ public class BoardInfo {
         return "";
     }
 
+    /**
+     * Gets the board model.
+     *
+     * @return the board model
+     */
     public static String getBoardModel(){
         try{
             return FileUtils.readFile(FileUtils.BOARD_MODEL_URI).replace("\u0000", "");
@@ -47,6 +61,11 @@ public class BoardInfo {
         return "";
     }
 
+    /**
+     * Gets the board name.
+     *
+     * @return the board name
+     */
     public static String getBoardName(){
         try{
             return FileUtils.readFile(FileUtils.BOARD_NAME_URI);

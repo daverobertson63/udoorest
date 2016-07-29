@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.dhr.quad;
 /**
  *  Copyright (C) 2014 Ekironji <ekironjisolutions@gmail.com>
@@ -27,15 +30,33 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.InputStream;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Serial.
+ */
 public class Serial {
 
+	/** The m serial port. */
 	private SerialPort mSerialPort;
+	
+	/** The out. */
 	private OutputStream out;
+	
+	/** The in. */
 	private InputStream in;
 
+	/**
+	 * Instantiates a new serial.
+	 */
 	public Serial() {
 	}
 
+	/**
+	 * Connect.
+	 *
+	 * @param portName the port name
+	 * @throws Exception the exception
+	 */
 	public void connect(String portName) throws Exception {
 		CommPortIdentifier mCommPortIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 		if (mCommPortIdentifier.isCurrentlyOwned()) {
@@ -58,14 +79,26 @@ public class Serial {
 		}
 	}
 
+	/**
+	 * Write byte array.
+	 *
+	 * @param msg the msg
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void writeByteArray(byte[] msg) throws IOException {
 		out.write(msg);
 	}
 
+	/**
+	 * Read start buffer thread.
+	 */
 	public void read_startBufferThread() {
 		(new Thread(new SerialReader(in))).start();
 	}
 
+	/**
+	 * Disconnect.
+	 */
 	public void disconnect() {
 		try {
 			if (out != null) {
@@ -84,14 +117,26 @@ public class Serial {
 		}
 	}
 
+	/**
+	 * The Class SerialReader.
+	 */
 	public static class SerialReader implements Runnable {
 
+		/** The in. */
 		InputStream in;
 
+		/**
+		 * Instantiates a new serial reader.
+		 *
+		 * @param in the in
+		 */
 		public SerialReader(InputStream in) {
 			this.in = in;
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Runnable#run()
+		 */
 		public void run() {
 			byte[] buffer = new byte[7];
 			int len = -1;

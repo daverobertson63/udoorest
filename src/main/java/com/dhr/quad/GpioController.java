@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.dhr.quad;
 
 import static spark.Spark.*;
@@ -7,8 +10,17 @@ import com.dhr.quad.BoardInfo;
 import static com.dhr.quad.JsonUtil.*;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GpioController.
+ */
 public class GpioController {
 
+	/**
+	 * Instantiates a new gpio controller.
+	 *
+	 * @param gpioService the gpio service
+	 */
 	public GpioController(final GpioService gpioService) {
 
 		get("/gpio", (req, res) -> gpioService.getAllGpioPins(), json());
@@ -18,11 +30,19 @@ public class GpioController {
 			String message = req.params(":message");
 			
 			// Send message to serial port
-			gpioService.SerialMessageService(message);
 			
-			res.status(400);
-			return new ResponseError("Message has failed");
+			try {
+				gpioService.SerialMessageService(message);
+			}
+			catch (Exception e)
+			{
+				res.status(400);
+				return new ResponseError("Message has failed");
+	
+			}
+			return message;
 			
+						
 		}, json());
 
 
